@@ -1,16 +1,37 @@
 // Core
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import actions from './actions';
+import { mapState } from './lib';
 
 // Instruments
 import Styles from './styles.m.css';
-import { tasks } from './tasks';
+// import { tasks } from './tasks'; TODO: remove later.
 
 // Components
 import Task from '../Task';
+import Spinner from '../Spinner';
 import Checkbox from '../../theme/assets/Checkbox';
 
-export default class Scheduler extends Component {
+const {
+    fetchTasks,
+} = actions;
+
+@connect(mapState, {
+    fetchTasks,
+})
+class Scheduler extends Component {
+    componentDidMount() {
+        const { fetchTasks: fetchTasksAC } = this.props;
+
+        fetchTasksAC();
+    }
+
     render () {
+        const {
+            loading,
+            tasks,
+        } = this.props;
         const todoList = tasks.map((task) => (
             <Task
                 completed = { task.completed }
@@ -37,7 +58,7 @@ export default class Scheduler extends Component {
                                 placeholder = 'Описание моей новой задачи'
                                 type = 'text'
                             />
-                            <button>Добавить задачу</button>
+                            <button type="submit">Добавить задачу</button>
                         </form>
                         <div className = { Styles.overlay }>
                             <ul>{todoList}</ul>
@@ -50,7 +71,12 @@ export default class Scheduler extends Component {
                         </span>
                     </footer>
                 </main>
+                <Spinner isSpinning = { loading } />
             </section>
         );
     }
 }
+
+export default Scheduler;
+export { default as reducer } from './reducer';
+export { default as sagas } from './sagas';
