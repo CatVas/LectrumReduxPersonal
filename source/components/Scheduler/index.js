@@ -6,7 +6,6 @@ import { mapState } from './lib';
 
 // Instruments
 import Styles from './styles.m.css';
-// import { tasks } from './tasks'; TODO: remove later.
 
 // Components
 import Task from '../Task';
@@ -14,11 +13,17 @@ import Spinner from '../Spinner';
 import Checkbox from '../../theme/assets/Checkbox';
 
 const {
+    createTask,
+    deleteTask,
     fetchTasks,
+    taskInputChange,
 } = actions;
 
 @connect(mapState, {
+    createTask,
+    deleteTask,
     fetchTasks,
+    taskInputChange,
 })
 class Scheduler extends Component {
     componentDidMount() {
@@ -27,9 +32,35 @@ class Scheduler extends Component {
         fetchTasksAC();
     }
 
+    handleSubmit = (ev) => {
+        ev.preventDefault();
+
+        const {
+            createTask: createTaskAC,
+            taskInput: { value },
+        } = this.props;
+
+        if (value) {
+            createTaskAC(value);
+        }
+    }
+
+    handleTaskDelete = (taskId) => {
+        const { deleteTask: deleteTaskAC } = this.props;
+
+        deleteTaskAC(taskId);
+    };
+
+    handleTaskInputChange = (ev) => {
+        const { taskInputChange: taskInputChangeAC } = this.props;
+
+        taskInputChangeAC(ev.target.value.slice(0, 50));
+    }
+
     render () {
         const {
             loading,
+            taskInput,
             tasks,
         } = this.props;
         const todoList = tasks.map((task) => (
@@ -39,6 +70,7 @@ class Scheduler extends Component {
                 id = { task.id }
                 key = { task.id }
                 message = { task.message }
+                onDelete = { this.handleTaskDelete }
                 { ...task }
             />
         ));
@@ -51,12 +83,14 @@ class Scheduler extends Component {
                         <input placeholder = 'Поиск' type = 'search' />
                     </header>
                     <section>
-                        <form>
+                        <form onSubmit={this.handleSubmit}>
                             <input
                                 className = { Styles.createTask }
                                 maxLength = { 50 }
+                                onChange = { this.handleTaskInputChange }
                                 placeholder = 'Описание моей новой задачи'
                                 type = 'text'
+                                value = { taskInput.value }
                             />
                             <button type="submit">Добавить задачу</button>
                         </form>

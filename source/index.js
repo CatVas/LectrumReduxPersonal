@@ -11,7 +11,7 @@ import './theme/init';
 import App from './pages/App';
 
 const renderApp = (
-    <Provider store={store}>
+    <Provider store = { store }>
         <App />
     </Provider>
 );

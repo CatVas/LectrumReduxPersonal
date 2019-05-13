@@ -1,7 +1,7 @@
 // Core
 import React, { Component } from 'react';
 import { hot } from 'react-hot-loader';
-import { Scheduler } from '../../components'
+import { Scheduler } from '../../components';
 
 @hot(module)
 class App extends Component {

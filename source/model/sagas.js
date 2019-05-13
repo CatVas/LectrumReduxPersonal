@@ -4,6 +4,6 @@ import { sagas as schedulerSagas } from '../components/Scheduler';
 
 export default function* () {
     yield all([
-        call(schedulerSagas),
+        call(schedulerSagas)
     ]);
 }

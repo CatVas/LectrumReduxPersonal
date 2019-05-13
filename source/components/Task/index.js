@@ -12,8 +12,18 @@ import Edit from '../../theme/assets/Edit';
 import Star from '../../theme/assets/Star';
 
 export default class Task extends PureComponent {
+    handleDelete = () => {
+        const { id, onDelete } = this.props;
+
+        onDelete(id);
+    };
+
     render () {
-        const { message, completed } = this.props;
+        const {
+            favorite,
+            message,
+            completed,
+        } = this.props;
 
         const styles = cx(Styles.task, {
             [Styles.completed]: completed,
@@ -32,8 +42,8 @@ export default class Task extends PureComponent {
                 </div>
                 <div className = { Styles.actions }>
                     <Star
-                        checked
                         inlineBlock
+                        checked = { favorite }
                         className = { Styles.toggleTaskFavoriteState }
                         color1 = '#3B8EF3'
                         color2 = '#000'
@@ -50,6 +60,7 @@ export default class Task extends PureComponent {
                         className = { Styles.removeTask }
                         color1 = '#3B8EF3'
                         color2 = '#000'
+                        onClick = { this.handleDelete }
                     />
                 </div>
             </li>
