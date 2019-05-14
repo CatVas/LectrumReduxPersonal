@@ -70,6 +70,30 @@ const api = {
             return { error: message };
         }
     },
+
+    updateTask: async (task) => {
+        try {
+            const answer = await fetch(MAIN_URL, {
+                body:    JSON.stringify([task]),
+                headers: {
+                    Authorization:  TOKEN,
+                    'Content-Type': 'application/json',
+                },
+                method: 'PUT',
+            });
+            const { data, message } = await answer.json();
+
+            if (answer.status !== 200) {
+                throw new Error(message);
+            }
+
+            return { updatedTasks: data };
+        } catch (error) {
+            const { message } = error;
+
+            return { error: message };
+        }
+    },
 };
 
 export { api };

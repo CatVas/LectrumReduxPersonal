@@ -13,24 +13,48 @@ import Spinner from '../Spinner';
 import Checkbox from '../../theme/assets/Checkbox';
 
 const {
+    changeTaskMessage,
+    clearTaskEdit,
     createTask,
     deleteTask,
     fetchTasks,
     taskInputChange,
+    toggleTaskEdit,
+    updateTask,
 } = actions;
 
 @connect(mapState, {
+    changeTaskMessage,
+    clearTaskEdit,
     createTask,
     deleteTask,
     fetchTasks,
     taskInputChange,
+    toggleTaskEdit,
+    updateTask,
 })
 class Scheduler extends Component {
     componentDidMount() {
         const { fetchTasks: fetchTasksAC } = this.props;
 
         fetchTasksAC();
+        document.body.addEventListener('keydown', this.handleKeyDown);
     }
+
+    componentWillUnmount() {
+        document.body.removeEventListener('keydown', this.handleKeyDown);
+    }
+
+    handleKeyDown = (ev) => {
+        const {
+            clearTaskEdit: clearTaskEditAC,
+            taskEdited,
+        } = this.props;
+
+        if ((taskEdited.id || taskEdited.message) && ev.key === 'Escape') {
+            clearTaskEditAC();
+        }
+    };
 
     handleSubmit = (ev) => {
         ev.preventDefault();
@@ -51,29 +75,56 @@ class Scheduler extends Component {
         deleteTaskAC(taskId);
     };
 
+    handleTaskUpdate = (task) => {
+        const { updateTask: updateTaskAC } = this.props;
+
+        updateTaskAC(task);
+    };
+
     handleTaskInputChange = (ev) => {
         const { taskInputChange: taskInputChangeAC } = this.props;
 
         taskInputChangeAC(ev.target.value.slice(0, 50));
     }
 
+    handleToggleTaskEdit = (data) => {
+        const { toggleTaskEdit: toggleTaskEditAC } = this.props;
+
+        toggleTaskEditAC(data);
+    }
+
     render () {
         const {
+            changeTaskMessage: changeTaskMessageAC,
             loading,
             taskInput,
+            taskEdited,
             tasks,
         } = this.props;
-        const todoList = tasks.map((task) => (
-            <Task
-                completed = { task.completed }
-                favorite = { task.favorite }
-                id = { task.id }
-                key = { task.id }
-                message = { task.message }
-                onDelete = { this.handleTaskDelete }
-                { ...task }
-            />
-        ));
+        const todoList = tasks.map((task) => {
+            const {
+                message,
+                ...taskProps
+            } = task;
+            const editing = task.id === taskEdited.id;
+            const taskMessage = editing ? taskEdited.message : message;
+
+            return (
+                <Task
+                    completed = { task.completed }
+                    editing = { editing }
+                    favorite = { task.favorite }
+                    id = { task.id }
+                    key = { task.id }
+                    message = { taskMessage }
+                    onChangeMessage = { changeTaskMessageAC }
+                    onDelete = { this.handleTaskDelete }
+                    onToggleEdit = { this.handleToggleTaskEdit }
+                    onUpdate = { this.handleTaskUpdate }
+                    { ...taskProps }
+                />
+            );
+        });
 
         return (
             <section className = { Styles.scheduler }>
@@ -99,7 +150,11 @@ class Scheduler extends Component {
                         </div>
                     </section>
                     <footer>
-                        <Checkbox checked color1 = '#363636' color2 = '#fff' />
+                        <Checkbox
+                            checked
+                            color1 = '#363636'
+                            color2 = '#fff'
+                        />
                         <span className = { Styles.completeAllTasks }>
                             Все задачи выполнены
                         </span>

@@ -1,10 +1,15 @@
 
 import { fromJS } from 'immutable';
 import { handleActions } from 'redux-actions';
+import { sortImmutableTasks } from '../../instruments/helpers';
 import types from '../../model/types';
 
 const initialState = fromJS({
     loading: true,
+    taskEdited: {
+        id: '',
+        message: '',
+    },
     taskInput: {
         value: '',
     },
@@ -15,10 +20,16 @@ export default handleActions({
     [types.APP_LOADING]: (state, { payload }) => state
         .set('loading', true),
 
+    [types.CHANGE_TASK_MESSAGE]: (state, { payload }) => state
+        .setIn(['taskEdited', 'message'], payload.message),
+
+    [types.CLEAR_TASK_EDIT]: (state, { payload }) => state
+        .set('taskEdited', initialState.get('taskEdited')),
+
     [types.CREATE_TASK_SUCCESS]: (state, { payload }) => state
         .update(
             'tasks',
-            tasks => tasks.unshift(fromJS(payload.task)),
+            tasks => sortImmutableTasks(tasks.unshift(fromJS(payload.task))),
         )
         .updateIn(['taskInput', 'value'], value => '')
         .set('loading', false),
@@ -32,11 +43,39 @@ export default handleActions({
 
     [types.FETCH_TASKS_SUCCESS]: (state, { payload }) => state
         .set('loading', false)
-        .update('tasks', tasks => tasks.concat(fromJS(payload.tasks))),
+        .update(
+            'tasks',
+            tasks => sortImmutableTasks(tasks.concat(fromJS(payload.tasks))),
+        ),
 
     [types.TASK_INPUT_CHANGE]: (state, { payload }) => state
         .updateIn(
             ['taskInput', 'value'],
             value => payload.value,
         ),
+
+    [types.TOGGLE_TASK_EDIT]: (state, { payload }) => {
+        const isEdited = state.getIn(['taskEdited', 'id']) === payload.id;
+
+        return state
+            .updateIn(['taskEdited', 'id'], id => isEdited ? '' : payload.id)
+            .updateIn(
+                ['taskEdited', 'message'],
+                message => isEdited ? '' : payload.message
+            );
+    },
+
+    [types.UPDATE_TASK_SUCCESS]: (state, { payload }) => state
+        .update(
+            'tasks',
+            (tasks) => {
+                const idx = tasks
+                    .findIndex(task => task.get('id') === payload.id);
+
+                return sortImmutableTasks(
+                    tasks.update(idx, task => task.merge(payload))
+                )
+            },
+        )
+        .set('loading', false),
 }, initialState);
