@@ -1,5 +1,6 @@
 // Core
 import React, { Component } from 'react';
+import FlipMove from 'react-flip-move';
 import { connect } from 'react-redux';
 import actions from './actions';
 import { mapState } from './lib';
@@ -179,7 +180,11 @@ class Scheduler extends Component {
                             <button type="submit">Добавить задачу</button>
                         </form>
                         <div className = { Styles.overlay }>
-                            <ul>{todoList}</ul>
+                            <ul>
+                                <FlipMove>
+                                    {todoList}
+                                </FlipMove>
+                            </ul>
                         </div>
                     </section>
                     <footer>
