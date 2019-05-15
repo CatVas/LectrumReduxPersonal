@@ -71,10 +71,10 @@ const api = {
         }
     },
 
-    updateTask: async (task) => {
+    updateTasks: async (tasks = []) => {
         try {
             const answer = await fetch(MAIN_URL, {
-                body:    JSON.stringify([task]),
+                body:    JSON.stringify(tasks),
                 headers: {
                     Authorization:  TOKEN,
                     'Content-Type': 'application/json',

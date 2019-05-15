@@ -6,11 +6,11 @@ import { api } from '../../../../REST';
 export default function* ({ payload }) {
     yield put(actions.appLoading());
 
-    const { onSuccess, ...rest } = payload;
-    const { updatedTasks } = yield call(api.updateTask, rest);
+    const { onSuccess, tasks } = payload;
+    const { updatedTasks } = yield call(api.updateTasks, tasks);
 
     if (updatedTasks) {
-        yield put(actions.updateTaskSuccess(updatedTasks[0]));
+        yield put(actions.updateTasksSuccess(updatedTasks));
         typeof onSuccess === 'function' && onSuccess();
     }
 }

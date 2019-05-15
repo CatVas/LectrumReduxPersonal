@@ -47,6 +47,12 @@ export default createActions({
     [types.FETCH_TASKS_SUCCESS]: payload => payload,
 
     /**
+     * @param {String} searchBy
+     * @return {Object}
+    */
+    [types.SEARCH_TASKS]: searchBy => ({ searchBy }),
+
+    /**
      * @param {String} value
      * @return {Object}
     */
@@ -62,23 +68,24 @@ export default createActions({
 
     /**
      * @param {Object} payload
-     * @param {Boolean} payload.completed
-     * @param {Boolean} payload.favorite
-     * @param {String} payload.id
-     * @param {String} payload.message
+     * @param {Object[]} payload.tasks
+     * @param {Boolean} payload.tasks.completed
+     * @param {Boolean} payload.tasks.favorite
+     * @param {String} payload.tasks.id
+     * @param {String} payload.tasks.message
      * @param {Function} payload.onSuccess
      * @return {Object}
     */
-    [types.UPDATE_TASK]: payload => payload,
+    [types.UPDATE_TASKS]: payload => payload,
 
     /**
-     * @param {Object} payload
-     * @param {Boolean} payload.completed
-     * @param {Boolean} payload.favorite
-     * @param {String} payload.id
-     * @param {String} payload.message
-     * @param {String} payload.modified
+     * @param {Array} payload
+     * @param {Boolean} payload[].completed
+     * @param {Boolean} payload[].favorite
+     * @param {String} payload[].id
+     * @param {String} payload[].message
+     * @param {String} payload[].modified
      * @return {Object}
     */
-    [types.UPDATE_TASK_SUCCESS]: payload => payload,
+    [types.UPDATE_TASKS_SUCCESS]: payload => payload,
 });

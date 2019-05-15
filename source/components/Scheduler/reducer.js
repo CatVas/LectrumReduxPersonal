@@ -6,6 +6,7 @@ import types from '../../model/types';
 
 const initialState = fromJS({
     loading: true,
+    searchBy: '',
     taskEdited: {
         id: '',
         message: '',
@@ -48,6 +49,9 @@ export default handleActions({
             tasks => sortImmutableTasks(tasks.concat(fromJS(payload.tasks))),
         ),
 
+    [types.SEARCH_TASKS]: (state, { payload }) => state
+        .set('searchBy', payload.searchBy),
+
     [types.TASK_INPUT_CHANGE]: (state, { payload }) => state
         .updateIn(
             ['taskInput', 'value'],
@@ -65,16 +69,19 @@ export default handleActions({
             );
     },
 
-    [types.UPDATE_TASK_SUCCESS]: (state, { payload }) => state
+    [types.UPDATE_TASKS_SUCCESS]: (state, { payload = [] }) => state
         .update(
             'tasks',
             (tasks) => {
-                const idx = tasks
-                    .findIndex(task => task.get('id') === payload.id);
+                let newTasks = tasks;
 
-                return sortImmutableTasks(
-                    tasks.update(idx, task => task.merge(payload))
-                )
+                payload.forEach((pTask) => {
+                    const idx = newTasks
+                        .findIndex(task => task.get('id') === pTask.id);
+                    newTasks = newTasks.update(idx, task => task.merge(pTask));
+                });
+
+                return sortImmutableTasks(newTasks);
             },
         )
         .set('loading', false),

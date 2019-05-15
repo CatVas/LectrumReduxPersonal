@@ -53,7 +53,7 @@ export default class Task extends PureComponent {
     handleChangeMessage = (ev) => {
         const { onChangeMessage } = this.props;
 
-        onChangeMessage(ev.target.value);
+        onChangeMessage(ev.target.value.slice(0, 50));
     };
 
     handleDelete = () => {
@@ -67,11 +67,15 @@ export default class Task extends PureComponent {
             const { completed, favorite, id, message, onUpdate } = this.props;
 
             onUpdate({
-                completed,
-                favorite,
-                id,
-                message,
                 onSuccess: this.toggleEdit,
+                tasks: [
+                    {
+                        completed,
+                        favorite,
+                        id,
+                        message,
+                    }
+                ],
             });
         }
     };
@@ -80,10 +84,14 @@ export default class Task extends PureComponent {
         const { completed, favorite, id, message, onUpdate } = this.props;
 
         onUpdate({
-            completed: !completed,
-            favorite,
-            id,
-            message,
+            tasks: [
+                {
+                    completed: !completed,
+                    favorite,
+                    id,
+                    message,
+                }
+            ],
         });
     }
 
@@ -97,10 +105,14 @@ export default class Task extends PureComponent {
         const { completed, favorite, id, message, onUpdate } = this.props;
 
         onUpdate({
-            completed,
-            favorite: !favorite,
-            id,
-            message,
+            tasks: [
+                {
+                    completed,
+                    favorite: !favorite,
+                    id,
+                    message,
+                }
+            ],
         });
     }
 
@@ -129,6 +141,7 @@ export default class Task extends PureComponent {
                     />
                     <input
                         disabled = { !editing }
+                        maxLength = { 50 }
                         onChange = { this.handleChangeMessage }
                         onKeyPress = { this.handleKeyPress }
                         ref = { this.editingInput }

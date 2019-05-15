@@ -18,9 +18,10 @@ const {
     createTask,
     deleteTask,
     fetchTasks,
+    searchTasks,
     taskInputChange,
     toggleTaskEdit,
-    updateTask,
+    updateTasks,
 } = actions;
 
 @connect(mapState, {
@@ -29,9 +30,10 @@ const {
     createTask,
     deleteTask,
     fetchTasks,
+    searchTasks,
     taskInputChange,
     toggleTaskEdit,
-    updateTask,
+    updateTasks,
 })
 class Scheduler extends Component {
     componentDidMount() {
@@ -45,6 +47,17 @@ class Scheduler extends Component {
         document.body.removeEventListener('keydown', this.handleKeyDown);
     }
 
+    handleAllCompleted = () => {
+        const { tasks } = this.props;
+        const tasksToComplete = tasks
+            .filter(task => !task.completed)
+            .map(task => ({ ...task, completed: true }));
+
+        if (tasksToComplete.length > 0) {
+            this.handleTasksUpdate({ tasks: tasksToComplete });
+        }
+    }
+
     handleKeyDown = (ev) => {
         const {
             clearTaskEdit: clearTaskEditAC,
@@ -55,6 +68,12 @@ class Scheduler extends Component {
             clearTaskEditAC();
         }
     };
+
+    handleSearch = (ev) => {
+        const { searchTasks: searchTasksAC } = this.props;
+
+        searchTasksAC(ev.target.value);
+    }
 
     handleSubmit = (ev) => {
         ev.preventDefault();
@@ -75,10 +94,10 @@ class Scheduler extends Component {
         deleteTaskAC(taskId);
     };
 
-    handleTaskUpdate = (task) => {
-        const { updateTask: updateTaskAC } = this.props;
+    handleTasksUpdate = (data) => {
+        const { updateTasks: updateTasksAC } = this.props;
 
-        updateTaskAC(task);
+        updateTasksAC(data);
     };
 
     handleTaskInputChange = (ev) => {
@@ -97,41 +116,55 @@ class Scheduler extends Component {
         const {
             changeTaskMessage: changeTaskMessageAC,
             loading,
+            searchBy,
             taskInput,
             taskEdited,
             tasks,
         } = this.props;
-        const todoList = tasks.map((task) => {
-            const {
-                message,
-                ...taskProps
-            } = task;
-            const editing = task.id === taskEdited.id;
-            const taskMessage = editing ? taskEdited.message : message;
+        const allCompleted = tasks.filter(task => !task.completed).length === 0;
+        const todoList = tasks
+            .filter((task) => {
+                const messageLower = task.message.toLowerCase();
+                const searchLower = searchBy.toLowerCase();
 
-            return (
-                <Task
-                    completed = { task.completed }
-                    editing = { editing }
-                    favorite = { task.favorite }
-                    id = { task.id }
-                    key = { task.id }
-                    message = { taskMessage }
-                    onChangeMessage = { changeTaskMessageAC }
-                    onDelete = { this.handleTaskDelete }
-                    onToggleEdit = { this.handleToggleTaskEdit }
-                    onUpdate = { this.handleTaskUpdate }
-                    { ...taskProps }
-                />
-            );
-        });
+                return messageLower.indexOf(searchLower) > -1;
+            })
+            .map((task) => {
+                const {
+                    message,
+                    ...taskProps
+                } = task;
+                const editing = task.id === taskEdited.id;
+                const taskMessage = editing ? taskEdited.message : message;
+
+                return (
+                    <Task
+                        completed = { task.completed }
+                        editing = { editing }
+                        favorite = { task.favorite }
+                        id = { task.id }
+                        key = { task.id }
+                        message = { taskMessage }
+                        onChangeMessage = { changeTaskMessageAC }
+                        onDelete = { this.handleTaskDelete }
+                        onToggleEdit = { this.handleToggleTaskEdit }
+                        onUpdate = { this.handleTasksUpdate }
+                        { ...taskProps }
+                    />
+                );
+            });
 
         return (
             <section className = { Styles.scheduler }>
                 <main>
                     <header>
                         <h1>Планировщик задач</h1>
-                        <input placeholder = 'Поиск' type = 'search' />
+                        <input
+                            onChange = { this.handleSearch }
+                            placeholder = 'Поиск'
+                            type = 'search'
+                            value = { searchBy }
+                        />
                     </header>
                     <section>
                         <form onSubmit={this.handleSubmit}>
@@ -151,9 +184,10 @@ class Scheduler extends Component {
                     </section>
                     <footer>
                         <Checkbox
-                            checked
+                            checked = { allCompleted }
                             color1 = '#363636'
                             color2 = '#fff'
+                            onClick = { this.handleAllCompleted }
                         />
                         <span className = { Styles.completeAllTasks }>
                             Все задачи выполнены
