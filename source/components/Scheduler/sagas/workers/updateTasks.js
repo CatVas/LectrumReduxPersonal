@@ -11,6 +11,9 @@ export default function* ({ payload }) {
 
     if (updatedTasks) {
         yield put(actions.updateTasksSuccess(updatedTasks));
-        typeof onSuccess === 'function' && onSuccess();
+
+        if (typeof onSuccess === 'function') {
+            yield call(onSuccess);
+        }
     }
 }

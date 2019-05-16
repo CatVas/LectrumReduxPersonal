@@ -4,7 +4,7 @@ import { handleActions } from 'redux-actions';
 import { sortImmutableTasks } from '../../instruments/helpers';
 import types from '../../model/types';
 
-const initialState = fromJS({
+export const initialState = fromJS({
     loading: true,
     searchBy: '',
     taskEdited: {
@@ -18,13 +18,13 @@ const initialState = fromJS({
 });
 
 export default handleActions({
-    [types.APP_LOADING]: (state, { payload }) => state
+    [types.APP_LOADING]: state => state
         .set('loading', true),
 
     [types.CHANGE_TASK_MESSAGE]: (state, { payload }) => state
         .setIn(['taskEdited', 'message'], payload.message),
 
-    [types.CLEAR_TASK_EDIT]: (state, { payload }) => state
+    [types.CLEAR_TASK_EDIT]: state => state
         .set('taskEdited', initialState.get('taskEdited')),
 
     [types.CREATE_TASK_SUCCESS]: (state, { payload }) => state
@@ -78,7 +78,13 @@ export default handleActions({
                 payload.forEach((pTask) => {
                     const idx = newTasks
                         .findIndex(task => task.get('id') === pTask.id);
-                    newTasks = newTasks.update(idx, task => task.merge(pTask));
+
+                    if (idx > - 1) {
+                        newTasks = newTasks.update(
+                            idx,
+                            task => task.merge(pTask),
+                        );
+                    }
                 });
 
                 return sortImmutableTasks(newTasks);

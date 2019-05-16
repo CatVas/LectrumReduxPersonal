@@ -68,12 +68,12 @@ export default createActions({
 
     /**
      * @param {Object} payload
-     * @param {Object[]} payload.tasks
-     * @param {Boolean} payload.tasks.completed
-     * @param {Boolean} payload.tasks.favorite
-     * @param {String} payload.tasks.id
-     * @param {String} payload.tasks.message
      * @param {Function} payload.onSuccess
+     * @param {Object[]} payload.tasks
+     * @param {Boolean} payload.tasks[].completed
+     * @param {Boolean} payload.tasks[].favorite
+     * @param {String} payload.tasks[].id
+     * @param {String} payload.tasks[].message
      * @return {Object}
     */
     [types.UPDATE_TASKS]: payload => payload,
