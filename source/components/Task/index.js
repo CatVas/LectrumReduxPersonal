@@ -14,34 +14,32 @@ import Star from '../../theme/assets/Star';
 
 export default class Task extends PureComponent {
     static defaultTypes = {
-        completed: false,
-        created: '',
-        editing: false,
-        favorite: false,
-        id: '',
-        message: '',
+        completed:       false,
+        created:         '',
+        editing:         false,
+        favorite:        false,
+        id:              '',
+        message:         '',
         onChangeMessage: () => void 0,
-        onDelete: () => void 0,
-        onToggleEdit: () => void 0,
-        onUpdate: () => void 0,
+        onDelete:        () => void 0,
+        onToggleEdit:    () => void 0,
+        onUpdate:        () => void 0,
     };
 
     static propTypes = {
-        completed: bool,
-        created: string,
-        editing: bool,
-        favorite: bool,
-        id: string,
-        message: string,
+        completed:       bool,
+        created:         string,
+        editing:         bool,
+        favorite:        bool,
+        id:              string,
+        message:         string,
         onChangeMessage: func,
-        onDelete: func,
-        onToggleEdit: func,
-        onUpdate: func,
+        onDelete:        func,
+        onToggleEdit:    func,
+        onUpdate:        func,
     };
 
-    editingInput = createRef();
-
-    componentDidUpdate(prevProps) {
+    componentDidUpdate (prevProps) {
         const { editing: prevEditing } = prevProps;
         const { editing: thisEditing } = this.props;
 
@@ -49,6 +47,8 @@ export default class Task extends PureComponent {
             this.editingInput.current.focus();
         }
     }
+
+    editingInput = createRef();
 
     handleChangeMessage = (ev) => {
         const { onChangeMessage } = this.props;
@@ -68,7 +68,7 @@ export default class Task extends PureComponent {
 
             onUpdate({
                 onSuccess: this.toggleEdit,
-                tasks: [
+                tasks:     [
                     {
                         completed,
                         favorite,
@@ -142,11 +142,11 @@ export default class Task extends PureComponent {
                     <input
                         disabled = { !editing }
                         maxLength = { 50 }
-                        onChange = { this.handleChangeMessage }
-                        onKeyPress = { this.handleKeyPress }
                         ref = { this.editingInput }
                         type = 'text'
                         value = { message }
+                        onChange = { this.handleChangeMessage }
+                        onKeyPress = { this.handleKeyPress }
                     />
                 </div>
                 <div className = { Styles.actions }>

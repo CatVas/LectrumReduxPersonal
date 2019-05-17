@@ -1,7 +1,7 @@
 
 import faker from 'faker';
 import { random, range } from 'lodash';
-import { call, put } from 'redux-saga/effects';
+import { call } from 'redux-saga/effects';
 import { expectSaga } from 'redux-saga-test-plan';
 import fetchTasks from '../fetchTasks';
 import actions from '../../../actions';
@@ -11,7 +11,7 @@ const fakeArray = () => range(1, random(5, 9))
     .map(() => ({ ...faker.random.objectElement() }));
 
 describe('fetchTasks saga:', () => {
-    let tasks;
+    let tasks = [];
 
     beforeEach(() => {
         tasks = fakeArray();

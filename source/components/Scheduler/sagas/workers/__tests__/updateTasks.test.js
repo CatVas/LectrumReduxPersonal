@@ -1,7 +1,7 @@
 
 import faker from 'faker';
 import { pick, random, range } from 'lodash';
-import { call, put } from 'redux-saga/effects';
+import { call } from 'redux-saga/effects';
 import { expectSaga } from 'redux-saga-test-plan';
 import updateTasks from '../updateTasks';
 import actions from '../../../actions';
@@ -11,13 +11,13 @@ const fakeArray = () => range(1, random(5, 9))
     .map(() => ({ ...faker.random.objectElement() }));
 
 describe('updateTasks saga:', () => {
-    let payload;
-    let updatedTasks;
+    let payload = {};
+    let updatedTasks = [];
 
     beforeEach(() => {
         payload = {
             onSuccess: jest.fn(),
-            tasks: fakeArray(),
+            tasks:     fakeArray(),
         };
         updatedTasks = fakeArray();
     });

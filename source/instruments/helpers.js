@@ -20,11 +20,11 @@ export function getDisplayName (WrappedComponent) {
 }
 
 export const sortImmutableTasks = (tasks = List()) => {
-    const completed = tasks.filter(task => task.get('completed'));
-    const incompleted = tasks.filter(task => !task.get('completed'));
+    const completed = tasks.filter((task) => task.get('completed'));
+    const incompleted = tasks.filter((task) => !task.get('completed'));
 
     return incompleted.sort(compareTasksByFavorite)
         .concat(
             completed.sort(compareTasksByFavorite)
         );
-}
+};

@@ -1,13 +1,13 @@
 
 import faker from 'faker';
-import { call, put } from 'redux-saga/effects';
+import { call } from 'redux-saga/effects';
 import { expectSaga } from 'redux-saga-test-plan';
 import deleteTask from '../deleteTask';
 import actions from '../../../actions';
 import { api } from '../../../../../REST';
 
 describe('deleteTask saga:', () => {
-    let payload;
+    let payload = {};
 
     beforeEach(() => {
         payload = { taskId: faker.random.number() };

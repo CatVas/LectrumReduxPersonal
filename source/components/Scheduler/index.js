@@ -37,22 +37,22 @@ const {
     updateTasks,
 })
 class Scheduler extends Component {
-    componentDidMount() {
+    componentDidMount () {
         const { fetchTasks: fetchTasksAC } = this.props;
 
         fetchTasksAC();
         document.body.addEventListener('keydown', this.handleKeyDown);
     }
 
-    componentWillUnmount() {
+    componentWillUnmount () {
         document.body.removeEventListener('keydown', this.handleKeyDown);
     }
 
     handleAllCompleted = () => {
         const { tasks } = this.props;
         const tasksToComplete = tasks
-            .filter(task => !task.completed)
-            .map(task => ({ ...task, completed: true }));
+            .filter((task) => !task.completed)
+            .map((task) => ({ ...task, completed: true }));
 
         if (tasksToComplete.length > 0) {
             this.handleTasksUpdate({ tasks: tasksToComplete });
@@ -122,7 +122,7 @@ class Scheduler extends Component {
             taskEdited,
             tasks,
         } = this.props;
-        const allCompleted = tasks.filter(task => !task.completed).length === 0;
+        const allCompleted = tasks.filter((task) => !task.completed).length === 0;
         const todoList = tasks
             .filter((task) => {
                 const messageLower = task.message.toLowerCase();
@@ -161,23 +161,23 @@ class Scheduler extends Component {
                     <header>
                         <h1>Планировщик задач</h1>
                         <input
-                            onChange = { this.handleSearch }
                             placeholder = 'Поиск'
                             type = 'search'
                             value = { searchBy }
+                            onChange = { this.handleSearch }
                         />
                     </header>
                     <section>
-                        <form onSubmit={this.handleSubmit}>
+                        <form onSubmit = { this.handleSubmit }>
                             <input
                                 className = { Styles.createTask }
                                 maxLength = { 50 }
-                                onChange = { this.handleTaskInputChange }
                                 placeholder = 'Описание моей новой задачи'
                                 type = 'text'
                                 value = { taskInput.value }
+                                onChange = { this.handleTaskInputChange }
                             />
-                            <button type="submit">Добавить задачу</button>
+                            <button type = 'submit'>Добавить задачу</button>
                         </form>
                         <div className = { Styles.overlay }>
                             <ul>

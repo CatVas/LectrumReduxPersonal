@@ -1,14 +1,14 @@
 
 import faker from 'faker';
-import { call, put } from 'redux-saga/effects';
+import { call } from 'redux-saga/effects';
 import { expectSaga } from 'redux-saga-test-plan';
 import createTask from '../createTask';
 import actions from '../../../actions';
 import { api } from '../../../../../REST';
 
 describe('createTask saga:', () => {
-    let payload;
-    let task;
+    let payload = {};
+    let task = {};
 
     beforeEach(() => {
         payload = { message: faker.lorem.words() };

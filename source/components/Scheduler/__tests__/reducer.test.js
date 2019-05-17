@@ -15,7 +15,7 @@ describe('reducer:', () => {
     it('handles "CHANGE_TASK_MESSAGE" action', () => {
         const action = {
             payload: { message: faker.lorem.words() },
-            type: types.CHANGE_TASK_MESSAGE,
+            type:    types.CHANGE_TASK_MESSAGE,
         };
         const state = reducer(initialState, action);
 
@@ -52,16 +52,16 @@ describe('reducer:', () => {
         };
         const action = {
             payload: { taskId: task.id },
-            type: types.DELETE_TASK_SUCCESS,
+            type:    types.DELETE_TASK_SUCCESS,
         };
         const newState = initialState.update(
             'tasks',
-            tasks => tasks.unshift(fromJS(task)),
+            (tasks) => tasks.unshift(fromJS(task)),
         );
         const state = reducer(newState, action);
 
         expect(state.get('tasks')
-            .filter(t => t.get('id') === task.id)
+            .filter((t) => t.get('id') === task.id)
             .toJS()
             .length
         ).toEqual(newState.get('tasks').toJS().length - 1);
@@ -74,8 +74,8 @@ describe('reducer:', () => {
             id: faker.lorem.word(),
         };
         const action = {
-            payload: { tasks: [task] },
-            type: types.FETCH_TASKS_SUCCESS,
+            payload: { tasks: [task]},
+            type:    types.FETCH_TASKS_SUCCESS,
         };
         const state = reducer(initialState, action);
 
@@ -86,7 +86,7 @@ describe('reducer:', () => {
     it('handles "SEARCH_TASKS" action', () => {
         const action = {
             payload: { searchBy: faker.lorem.words() },
-            type: types.SEARCH_TASKS,
+            type:    types.SEARCH_TASKS,
         };
         const state = reducer(initialState, action);
 
@@ -96,7 +96,7 @@ describe('reducer:', () => {
     it('handles "TASK_INPUT_CHANGE" action', () => {
         const action = {
             payload: { value: faker.lorem.words() },
-            type: types.TASK_INPUT_CHANGE,
+            type:    types.TASK_INPUT_CHANGE,
         };
         const state = reducer(initialState, action);
 
@@ -107,7 +107,7 @@ describe('reducer:', () => {
         it('toggles on', () => {
             const action = {
                 payload: {
-                    id: faker.lorem.word(),
+                    id:      faker.lorem.word(),
                     message: faker.lorem.words(),
                 },
                 type: types.TOGGLE_TASK_EDIT,
@@ -120,7 +120,7 @@ describe('reducer:', () => {
         it('toggles off', () => {
             const action = {
                 payload: {
-                    id: faker.lorem.word(),
+                    id:      faker.lorem.word(),
                     message: faker.lorem.words(),
                 },
                 type: types.TOGGLE_TASK_EDIT,

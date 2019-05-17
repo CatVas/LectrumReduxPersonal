@@ -17,7 +17,7 @@ describe('actions:', () => {
 
         expect(action).toEqual({
             payload: { message },
-            type: types.CHANGE_TASK_MESSAGE,
+            type:    types.CHANGE_TASK_MESSAGE,
         });
     });
 
@@ -33,7 +33,7 @@ describe('actions:', () => {
 
         expect(action).toEqual({
             payload: { message },
-            type: types.CREATE_TASK,
+            type:    types.CREATE_TASK,
         });
     });
 
@@ -43,7 +43,7 @@ describe('actions:', () => {
 
         expect(action).toEqual({
             payload: { task },
-            type: types.CREATE_TASK_SUCCESS,
+            type:    types.CREATE_TASK_SUCCESS,
         });
     });
 
@@ -53,7 +53,7 @@ describe('actions:', () => {
 
         expect(action).toEqual({
             payload: { taskId },
-            type: types.DELETE_TASK,
+            type:    types.DELETE_TASK,
         });
     });
 
@@ -63,7 +63,7 @@ describe('actions:', () => {
 
         expect(action).toEqual({
             payload: { taskId },
-            type: types.DELETE_TASK_SUCCESS,
+            type:    types.DELETE_TASK_SUCCESS,
         });
     });
 
@@ -93,7 +93,7 @@ describe('actions:', () => {
 
         expect(action).toEqual({
             payload: { searchBy },
-            type: types.SEARCH_TASKS,
+            type:    types.SEARCH_TASKS,
         });
     });
 
@@ -103,13 +103,13 @@ describe('actions:', () => {
 
         expect(action).toEqual({
             payload: { value },
-            type: types.TASK_INPUT_CHANGE,
+            type:    types.TASK_INPUT_CHANGE,
         });
     });
 
     it('generates "TOGGLE_TASK_EDIT" action', () => {
         const payload = {
-            id: faker.lorem.word(),
+            id:      faker.lorem.word(),
             message: faker.lorem.words(),
         };
         const action = actions.toggleTaskEdit(payload);
@@ -123,7 +123,7 @@ describe('actions:', () => {
     it('generates "UPDATE_TASKS" action', () => {
         const payload = {
             onSuccess: jest.fn(),
-            tasks: range(1, random(5, 9)).map(() => ({
+            tasks:     range(1, random(5, 9)).map(() => ({
                 ...faker.random.objectElement(),
             })),
         };
